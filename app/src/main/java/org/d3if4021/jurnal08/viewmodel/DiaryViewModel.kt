@@ -39,4 +39,28 @@ class DiaryViewModel(
             database.clear()
         }
     }
+
+    fun onClickUpdate(diary: Diary) {
+        uiScope.launch {
+            update(diary)
+        }
+    }
+
+    private suspend fun update(diary: Diary) {
+        withContext(Dispatchers.IO) {
+            database.update(diary)
+        }
+    }
+
+    fun onClickDelete(diaryId: Long) {
+        uiScope.launch {
+            delete(diaryId)
+        }
+    }
+
+    private suspend fun delete(diaryId: Long) {
+        withContext(Dispatchers.IO) {
+            database.delete(diaryId)
+        }
+    }
 }

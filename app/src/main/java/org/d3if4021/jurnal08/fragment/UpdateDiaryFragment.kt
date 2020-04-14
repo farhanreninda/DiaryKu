@@ -1,23 +1,19 @@
 package org.d3if4021.jurnal08.fragment
 
 import android.os.Bundle
+import android.view.*
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import org.d3if4021.jurnal08.MainActivity
 import org.d3if4021.jurnal08.R
+import org.d3if4021.jurnal08.database.Diary
 import org.d3if4021.jurnal08.database.DiaryDatabase
 import org.d3if4021.jurnal08.databinding.FragmentUpdateDiaryBinding
 import org.d3if4021.jurnal08.viewmodel.DiaryViewModel
 import org.d3if4021.jurnal08.viewmodel.DiaryViewModelFactor
 
-/**
- * A simple [Fragment] subclass.
- */
 class UpdateDiaryFragment : Fragment() {
 
     private lateinit var binding: FragmentUpdateDiaryBinding
@@ -30,18 +26,46 @@ class UpdateDiaryFragment : Fragment() {
         binding = DataBindingUtil.inflate(inflater,
             R.layout.fragment_update_diary, container, false)
 
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        if (arguments != null) {
+            val message = arguments!!.getString("message")
+
+            binding.etDiary.setText(message)
+        }
+
         val application = requireNotNull(this.activity).application
         val dataSource = DiaryDatabase.getInstance(application).DiaryDao
         val viewModelFactory = DiaryViewModelFactor(dataSource, application)
-        val diaryViewModel = ViewModelProviders.of(this, viewModelFactory).get(DiaryViewModel::class.java)
-//        DiarykuAdapter.updateItem(newList)
+        val diaryViewModel = ViewModelProvider(this, viewModelFactory).get(DiaryViewModel::class.java)
 
-        binding.fabCreate.setOnClickListener {
-            diaryViewModel.onClickInsert(binding.etDiary.text.toString())
+        binding.fabUpdate.setOnClickListener {
+            inputCheck(arguments!!.getLong("id"), diaryViewModel)
+            (binding.etDiary.text.toString())
             it.findNavController().navigate(R.id.action_updateDiaryFragment_to_homeFragment)
         }
 
-        return binding.root
+    }
+
+    private fun inputCheck(id: Long, diaryViewModel: DiaryViewModel): Boolean {
+        return when {
+            binding.etDiary.text.trim().isEmpty() -> false
+            else -> {
+                doUpdate(id, diaryViewModel)
+                true
+            }
+        }
+    }
+
+    private fun doUpdate(id: Long, diaryViewModel: DiaryViewModel) {
+        val message = binding.etDiary.text.toString()
+        val date = System.currentTimeMillis()
+        val diary = Diary(id, message, date)
+        diaryViewModel.onClickUpdate(diary)
     }
 
     private fun judul() {

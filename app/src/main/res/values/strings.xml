@@ -4,4 +4,14 @@
     <string name="buat_diary">Buat Diary</string>
     <string name="tuliskan_cerita">Tuliskan Diary</string>
     <string name="hapus_diary">Hapus Semua Diary</string>
+
+    <string name="null_message">Cerita harus diisi!</string>
+    <string name="success_insert">Berhasil menambahkan cerita!</string>
+    <string name="success_update">Berhasil update cerita!</string>
+    <string name="success_remove">Berhasil hapus cerita!</string>
+    <string name="insert">insert</string>
+    <string name="DarkMode">Dark Mode ON</string>
+    <string name="dark_mode_success">Dark Mode Berhasil</string>
+    <string name="light_mode_success">Light Mode Berhasil</string>
+    <string name="LightMode">Light Mode ON</string>
 </resources>
